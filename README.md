@@ -6,5 +6,5 @@ uv sync
 ```
 
 ```bash
-jupyter lab
+uv run jupyter lab
 ```
