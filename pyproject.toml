@@ -1,0 +1,15 @@
+[project]
+name = "pet-project-what-is-ducklake"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "duckdb==1.5.2",
+  "duckdb-engine>=0.17.0",
+  "fastparquet>=2026.5.0",
+  "jupysql>=0.11.1",
+  "jupyterlab>=4.5.7",
+  "pandas>=3.0.3",
+  "pytz>=2026.2"
+]
