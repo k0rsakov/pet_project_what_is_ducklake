@@ -220,3 +220,4 @@ __marimo__/
 # Project
 my_ducklake.ducklake.files/*
 my_ducklake.*
+02_classic_docker_ducklake/data
