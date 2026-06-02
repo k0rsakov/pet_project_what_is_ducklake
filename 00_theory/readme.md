@@ -1,5 +1,8 @@
 # Теория
 
+- [DuckLake v1.0: The Lakehouse Format Built on SQL Reaches Production-Readiness](https://ducklake.select/2026/04/13/ducklake-10/)
+- [DuckLake Docs](https://ducklake.select/docs/stable/)
+
 ## Виды проектирования Data-платформ
 
 ### DWH
