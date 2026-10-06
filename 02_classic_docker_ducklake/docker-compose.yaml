@@ -15,35 +15,37 @@ services:
       timeout: 5s
       retries: 5
 
-  minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
-    container_name: s3-ducklake
+  silo:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    container_name: silo
+    restart: always
+    volumes:
+      - ./data:/data
+    environment:
+      - MINIO_ROOT_USER=siloadmin
+      - MINIO_ROOT_PASSWORD=siloadmin
+    command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
       - "9001:9001"
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    volumes:
-      - ./data:/data
-    command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
+      test: [ "CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   mc:
-    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
-    container_name: minio-init-ducklake
+    image: pgsty/mc:RELEASE.2026-09-16T00-00-00Z
+    container_name: silo-init
     depends_on:
-      minio:
+      silo:
         condition: service_healthy
     environment:
       BUCKET_NAME: *val
     entrypoint: >
       /bin/sh -c "
-      until (/usr/bin/mc alias set minio http://minio:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 1; done;
-      /usr/bin/mc mb --ignore-existing minio/$$BUCKET_NAME;
+      until (/usr/bin/mc alias set silo http://silo:9000 siloadmin siloadmin) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc mb --ignore-existing silo/$$BUCKET_NAME;
       exit 0;
       "
